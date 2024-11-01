@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import * as Location from 'expo-location';
 
-const ClimaHora = () => {
+const HoraTemperatura = () => {
   const [temperatura, setTemperatura] = useState(null);
   const [ubicacion, setUbicacion] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -11,7 +11,6 @@ const ClimaHora = () => {
 
   useEffect(() => {
     const obtenerUbicacionYClima = async () => {
-      // Obtener permisos de ubicación
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         console.log('Permiso de ubicación no otorgado');
@@ -19,16 +18,13 @@ const ClimaHora = () => {
         return;
       }
 
-      // Obtener ubicación
       const ubicacion = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = ubicacion.coords;
       setUbicacion({ latitude, longitude });
 
-      // Obtener clima
-      const apiKey = 'TU_API_KEY_AQUI'; // Reemplaza con tu clave API
       try {
-        const respuesta = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`);
-        setTemperatura(respuesta.data.main.temp);
+        const respuesta = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+        setTemperatura(respuesta.data.current_weather.temperature);
       } catch (error) {
         console.log("Error al obtener clima:", error);
       } finally {
@@ -38,13 +34,12 @@ const ClimaHora = () => {
 
     obtenerUbicacionYClima();
 
-    // Actualizar hora cada segundo
     const intervalo = setInterval(() => {
       const ahora = new Date();
       setHoraActual(ahora.toLocaleTimeString());
     }, 1000);
 
-    return () => clearInterval(intervalo); // Limpiar intervalo al desmontar
+    return () => clearInterval(intervalo); 
   }, []);
 
   if (cargando) {
@@ -58,9 +53,6 @@ const ClimaHora = () => {
         <Text style={styles.temperatura}>Temperatura: {temperatura} °C</Text>
       ) : (
         <Text style={styles.error}>No se pudo obtener la temperatura.</Text>
-      )}
-      {ubicacion && (
-        <Text style={styles.ubicacion}>Ubicación: {ubicacion.latitude}, {ubicacion.longitude}</Text>
       )}
     </View>
   );
@@ -89,8 +81,8 @@ const styles = StyleSheet.create({
   },
   error: {
     fontSize: 18,
-    color: '#FF5252', // Color para errores
+    color: '#FF5252', 
   },
 });
 
-export default ClimaHora;
+export default HoraTemperatura;
