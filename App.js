@@ -6,6 +6,7 @@ import ConfiguracionNumero from './components/configuracionNumero/configuracionN
 import Contactos from './components/contactos/contactos';
 import HoraTemperatura from './components/horaTemperatura/horaTemperatura';
 import LlamadoEmergencia from'./components/llamadoEmergencia/llamadoEmergencia';
+import QrPantalla from './components/qr/qr';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name="Contactos" component={Contactos} options={{ title: 'Contactos' }} />
         <Stack.Screen name="HoraTemperatura" component={HoraTemperatura} options={{ title: 'Hora y Temperatura' }} />
         <Stack.Screen name="LlamadoEmergencia" component={LlamadoEmergencia} options={{ title: 'Llamado de emergencia' }} />
+        <Stack.Screen name="QrPantalla"  component={QrPantalla} options={{ title: 'Escanear Código QR' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
