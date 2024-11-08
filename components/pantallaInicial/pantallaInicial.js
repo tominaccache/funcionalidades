@@ -29,6 +29,12 @@ const PantallaInicial = ({ navigation }) => {
       >
         <Text style={styles.botonTexto}>Llamado de Emergencia</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.boton}
+        onPress={() => navigation.navigate('QrPantalla')}
+      >
+        <Text style={styles.botonTexto}>Acerca de nosotros</Text>
+      </TouchableOpacity>
     </View>
   );
 };

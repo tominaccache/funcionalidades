@@ -2,19 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
-export default function qrPantalla() {
+export default function QrPantalla() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Código QR</Text>
       <View style={styles.qrContainer}>
         <QRCode
-          value="Ariana Castro, Dana Mandelbaum y Agustina Potasman"
+          value="Tomas Naccache"
           size={200}
           color="#2c3e50"
           backgroundColor="#ecf0f1"
         />
       </View>
-      <Text style={styles.info}>Escanea este código QR para ver los integrantes.</Text>
+      <Text style={styles.info}>Escanea este código QR para ver al integrante</Text>
     </View>
   );
 }
@@ -24,29 +24,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f9fafb',
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#34495e',
-    marginBottom: 30,
+    backgroundColor: '#263238',  
+    padding: 20,
   },
   qrContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#DCDCDC',  
     padding: 20,
-    borderRadius: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
     marginBottom: 30,
+    textAlign: 'center',
+    color: '#FFFFFF',  
   },
   info: {
-    fontSize: 16,
-    color: '#7f8c8d',
+    marginTop:40,
+    fontSize: 18,
+    color: '#FFFFFF', 
     textAlign: 'center',
   },
 });

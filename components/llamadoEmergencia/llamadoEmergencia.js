@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, Linking, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Alert, Linking, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LlamadoEmergencia = () => {
@@ -25,9 +25,46 @@ const LlamadoEmergencia = () => {
     obtenerNumeroEmergencia();
   }, []);
 
-  // Función para enviar un mensaje de emergencia (puedes personalizar esta función según sea necesario)
+  // Función para enviar un mensaje de emergencia usando la aplicación correspondiente
   const enviarMensajeEmergencia = () => {
-    Alert.alert('Mensaje de Emergencia', 'Mensaje de emergencia enviado.');
+    if (!numeroEmergencia) {
+      Alert.alert('Error', 'No hay número de emergencia disponible');
+      return;
+    }
+
+    const mensaje = '¡Este es un mensaje de emergencia! Necesito ayuda inmediatamente.';
+    
+    if (Platform.OS === 'ios') {
+      // En iOS, usamos el esquema sms:// con el número de teléfono y el mensaje
+      const url = `sms:${numeroEmergencia}?body=${encodeURIComponent(mensaje)}`;
+      Linking.canOpenURL(url)
+        .then((supported) => {
+          if (supported) {
+            return Linking.openURL(url); // Abre la app de mensajes en iOS con el número de emergencia
+          } else {
+            Alert.alert('Error', 'No se puede abrir la aplicación de mensajes.');
+          }
+        })
+        .catch((err) => {
+          console.error('Error al abrir la aplicación de mensajes en iOS:', err);
+          Alert.alert('Error', 'No se pudo abrir la aplicación de mensajes en iOS.');
+        });
+    } else if (Platform.OS === 'android') {
+      // En Android también usamos sms:// con el número de teléfono y el mensaje
+      const url = `sms:${numeroEmergencia}?body=${encodeURIComponent(mensaje)}`;
+      Linking.canOpenURL(url)
+        .then((supported) => {
+          if (supported) {
+            return Linking.openURL(url); // Abre la app de mensajes en Android con el número de emergencia
+          } else {
+            Alert.alert('Error', 'No se puede abrir la aplicación de mensajes en Android.');
+          }
+        })
+        .catch((err) => {
+          console.error('Error al abrir la aplicación de mensajes en Android:', err);
+          Alert.alert('Error', 'No se pudo abrir la aplicación de mensajes en Android.');
+        });
+    }
   };
 
   // Función para realizar una llamada al número de emergencia
