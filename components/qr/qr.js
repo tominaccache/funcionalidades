@@ -3,12 +3,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 export default function QrPantalla() {
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Código QR</Text>
       <View style={styles.qrContainer}>
         <QRCode
-          value="Tomas Naccache"
+          value="https://docs.google.com/document/d/10grr0hrJ7Ga0kDlMdbAOIgwqdIblLKh1ocEoYNTUoZM/edit?usp=sharing"
           size={200}
           color="#2c3e50"
           backgroundColor="#ecf0f1"
