@@ -1,7 +1,58 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet, Alert, Linking } from 'react-native';
+import { Accelerometer } from 'expo-sensors';
+import * as SMS from 'expo-sms';
 
 const PantallaInicial = ({ navigation }) => {
+  const [accelerometerData, setAccelerometerData] = useState({});
+  const [isShakeDetected, setIsShakeDetected] = useState(false);
+  const emergencyNumber = "1234567890"; // Replace with the configured number
+
+  useEffect(() => {
+    Accelerometer.setUpdateInterval(100); // Check for shake every 100ms
+    const subscription = Accelerometer.addListener(data => {
+      setAccelerometerData(data);
+      detectShake(data);
+    });
+    return () => subscription.remove();
+  }, []);
+
+  const detectShake = ({ x, y, z }) => {
+    const threshold = 1.5; // Adjust sensitivity
+    const totalForce = Math.sqrt(x * x + y * y + z * z);
+
+    if (totalForce > threshold && !isShakeDetected) {
+      setIsShakeDetected(true);
+      sendEmergencyMessage();
+      setTimeout(() => setIsShakeDetected(false), 2000); // Prevent rapid re-triggering
+    }
+  };
+
+  const sendEmergencyMessage = async () => {
+    const message = "¡Emergencia! Necesito ayuda inmediata.";
+    try {
+      // Option 1: Send WhatsApp Message
+      const whatsappUrl = `https://wa.me/${emergencyNumber}?text=${encodeURIComponent(message)}`;
+      const supported = await Linking.canOpenURL(whatsappUrl);
+      if (supported) {
+        Linking.openURL(whatsappUrl);
+      } else {
+        Alert.alert("Error", "WhatsApp no está instalado en este dispositivo.");
+      }
+
+      // Option 2: Send SMS
+      // Uncomment to enable SMS functionality
+      // const isAvailable = await SMS.isAvailableAsync();
+      // if (isAvailable) {
+      //   await SMS.sendSMSAsync(emergencyNumber, message);
+      // } else {
+      //   Alert.alert("Error", "El envío de SMS no está soportado en este dispositivo.");
+      // }
+    } catch (error) {
+      Alert.alert("Error", "No se pudo enviar el mensaje.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Bienvenido</Text>
@@ -44,17 +95,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#263238', 
+    backgroundColor: '#263238',
   },
   titulo: {
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 30,
     textAlign: 'center',
-    color: '#FFFFFF', 
+    color: '#FFFFFF',
   },
   boton: {
-    backgroundColor: '#37474F', 
+    backgroundColor: '#37474F',
     borderRadius: 10,
     padding: 15,
     marginVertical: 10,
@@ -62,11 +113,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 5, 
+    elevation: 5,
   },
   botonTexto: {
     fontSize: 18,
-    color: '#FFFFFF', 
+    color: '#FFFFFF',
     textAlign: 'center',
   },
 });
