@@ -6,7 +6,7 @@ import * as SMS from 'expo-sms';
 const PantallaInicial = ({ navigation }) => {
   const [accelerometerData, setAccelerometerData] = useState({});
   const [isShakeDetected, setIsShakeDetected] = useState(false);
-  const emergencyNumber = "1234567890"; // Replace with the configured number
+  const emergencyNumber = "12345678"; // Replace with the configured number
 
   useEffect(() => {
     Accelerometer.setUpdateInterval(100); // Check for shake every 100ms
@@ -31,23 +31,15 @@ const PantallaInicial = ({ navigation }) => {
   const sendEmergencyMessage = async () => {
     const message = "¡Emergencia! Necesito ayuda inmediata.";
     try {
-      // Option 1: Send WhatsApp Message
-      const whatsappUrl = `https://wa.me/${emergencyNumber}?text=${encodeURIComponent(message)}`;
-      const supported = await Linking.canOpenURL(whatsappUrl);
-      if (supported) {
-        Linking.openURL(whatsappUrl);
-      } else {
-        Alert.alert("Error", "WhatsApp no está instalado en este dispositivo.");
-      }
 
-      // Option 2: Send SMS
-      // Uncomment to enable SMS functionality
-      // const isAvailable = await SMS.isAvailableAsync();
-      // if (isAvailable) {
-      //   await SMS.sendSMSAsync(emergencyNumber, message);
-      // } else {
-      //   Alert.alert("Error", "El envío de SMS no está soportado en este dispositivo.");
-      // }
+
+
+      const isAvailable = await SMS.isAvailableAsync();
+       if (isAvailable) {
+       await SMS.sendSMSAsync(emergencyNumber, message);
+       } else {
+        Alert.alert("Error", "El envío de SMS no está soportado en este dispositivo.");
+       }
     } catch (error) {
       Alert.alert("Error", "No se pudo enviar el mensaje.");
     }

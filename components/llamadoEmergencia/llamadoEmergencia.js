@@ -5,12 +5,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const LlamadoEmergencia = () => {
   const [numeroEmergencia, setNumeroEmergencia] = useState('');
 
-  // Función para obtener el número de emergencia desde AsyncStorage
+
   const obtenerNumeroEmergencia = async () => {
     try {
       const numero = await AsyncStorage.getItem('numeroEmergencia');
       if (numero) {
-        setNumeroEmergencia(numero); // Actualiza el estado con el número obtenido
+        setNumeroEmergencia(numero); 
       } else {
         Alert.alert('Error', 'No se encontró el número de emergencia');
       }
@@ -20,12 +20,12 @@ const LlamadoEmergencia = () => {
     }
   };
 
-  // Llama a la función para obtener el número al montar el componente
+
   useEffect(() => {
     obtenerNumeroEmergencia();
   }, []);
 
-  // Función para enviar un mensaje de emergencia usando la aplicación correspondiente
+
   const enviarMensajeEmergencia = () => {
     if (!numeroEmergencia) {
       Alert.alert('Error', 'No hay número de emergencia disponible');
@@ -35,12 +35,11 @@ const LlamadoEmergencia = () => {
     const mensaje = '¡Este es un mensaje de emergencia! Necesito ayuda inmediatamente.';
     
     if (Platform.OS === 'ios') {
-      // En iOS, usamos el esquema sms:// con el número de teléfono y el mensaje
       const url = `sms:${numeroEmergencia}?body=${encodeURIComponent(mensaje)}`;
       Linking.canOpenURL(url)
         .then((supported) => {
           if (supported) {
-            return Linking.openURL(url); // Abre la app de mensajes en iOS con el número de emergencia
+            return Linking.openURL(url); 
           } else {
             Alert.alert('Error', 'No se puede abrir la aplicación de mensajes.');
           }
@@ -50,12 +49,11 @@ const LlamadoEmergencia = () => {
           Alert.alert('Error', 'No se pudo abrir la aplicación de mensajes en iOS.');
         });
     } else if (Platform.OS === 'android') {
-      // En Android también usamos sms:// con el número de teléfono y el mensaje
       const url = `sms:${numeroEmergencia}?body=${encodeURIComponent(mensaje)}`;
       Linking.canOpenURL(url)
         .then((supported) => {
           if (supported) {
-            return Linking.openURL(url); // Abre la app de mensajes en Android con el número de emergencia
+            return Linking.openURL(url);
           } else {
             Alert.alert('Error', 'No se puede abrir la aplicación de mensajes en Android.');
           }
@@ -67,7 +65,7 @@ const LlamadoEmergencia = () => {
     }
   };
 
-  // Función para realizar una llamada al número de emergencia
+
   const realizarLlamadaEmergencia = () => {
     if (!numeroEmergencia) {
       Alert.alert('Error', 'No hay número de emergencia disponible');
